@@ -44,10 +44,10 @@ userRouter.post("/login",async(req, res) => {
                 const userID = {id: user._id}
                 const access_token = jwt.sign(userID, JWT_SECRET, {expiresIn: "1hr"});
                 const refresh_token = jwt.sign(userID, REFRESH_SECRET, {expiresIn: "1d"});
-                res.cookie('jwt', access_token, {
+                res.cookie('refresh', refresh_token, {
                     httpOnly: true,
                 })
-                return res.json({message: "SignIN successful", refreshToken: refresh_token})
+                return res.json({message: "SignIN successful", accessToken: access_token})
             }
             return res.status(404).json({message: "User not found"});
         }
@@ -61,17 +61,14 @@ userRouter.get('/super_secret', authEmailPassword, (req, res)=> {
     res.json({message: "Passed", id: req.userID});
 });
 
-userRouter.post('/access_token', (req, res) => {
-    const { refreshToken } = req.body;
-    if(refreshToken === undefined) return res.status(401).json({message: "No refresh token sent"});
+userRouter.post('/refres_login', (req, res) => {
+    const refreshToken = req.cookies.refresh;
+    if(refreshToken === undefined) return res.status(401).json({message: "No refresh token found, re-veify user"});
 
     try {
         const userID = jwt.verify(refreshToken, REFRESH_SECRET).id;
         const access_token = jwt.sign({id: userID}, JWT_SECRET, {expiresIn: "1hr"});
-        res.cookie('jwt', access_token, {
-            httpOnly: true,
-        })
-        return res.json({message: "SignIN successful", refreshToken})
+        return res.json({message: "SignIN successful", accessToken: access_token})
     } catch (error) {
         console.log(error);
         return res.status(401).json({message: "Invalid refresh token sent"});
