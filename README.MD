@@ -4,7 +4,7 @@ If you are looking for the frontend code, that is located at: [https://github.co
 
 The original hosted site is at: [https://useful-sites.netlify.app/](https://useful-sites.netlify.app/)
 
-The backend code is live at: [https://useful-sites.herokuapp.com](https://useful-sites.herokuapp.com)
+The backend code is live at: [https://useful-sites-backend.glitch.me/](https://useful-sites-backend.glitch.me/)
 
 
 ## How to run this backedn locally
